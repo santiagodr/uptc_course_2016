@@ -1,6 +1,6 @@
 ###Introduccion-repaso R y Graficas usando ggplot2
 # Por Santiago David (2016)
-# Curso Ecofisiologia y comportamiento en contexto evolutivo - UPTC
+# Curso Ecofisiologia y comportamiento en contexto evolutivo - UPTC - 2016
 
 #####
 #instalar paquetes
@@ -74,7 +74,7 @@ rm(list=ls())
 
 ### Anolis data ###
 
-anolis<-read.csv(file.choose("anolis"))
+anolis<-read.csv("anolis.convergence.csv")
 str(anolis)
 
 ggplot(data=anolis, aes(x= SVLength,y= TailLength,colour=Island))+
@@ -116,17 +116,21 @@ detach(anolis)
 
 #graficar primeros dos componentes principales para visualizar las ecomorfologias
 
+is.character(anolis$Ecomorph)
+typeof(anolis$Ecomorph)
+anolis$Ecomorph<-as.character(anolis$Ecomorph) # tenemos que convertir variable a categorica
+anolis$Island<-as.character(anolis$Island)
 
 plot(anolis$PC1,anolis$PC2,pch = anolis$Island)
 plot(anolis$PC1,anolis$PC2,pch = anolis$Ecomorph)
 
-is.character(anolis$Ecomorph)
-typeof(anolis$Ecomorph)
-anolis$Ecomorph<-as.character(anolis$Ecomorph)
-anolis$Island<-as.character(anolis$Island)
+ggplot(data = anolis, aes(x= PC1, y= PC2, colour= Island))+
+  geom_point(size=2)
+ggplot(data = anolis, aes(x= PC1, y= PC2, colour= Ecomorph))+
+  geom_point(size=3)
 
+#What does this imply about the body forms of species utilizing similar ecological resources?
 
-ggplot(data = anolis, aes(x= PC1, y= PC2, ))
 
 
 ############################
