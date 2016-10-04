@@ -1,11 +1,13 @@
-###Introduccion-repaso R y Graficas usando ggplot2
-# Por Santiago David (2016)
-# Curso Ecofisiologia y comportamiento en contexto evolutivo - UPTC - 2016
+######   Introduccion-repaso R y Graficas usando ggplot2
 
-#####
+# Curso Ecofisiologia y comportamiento en contexto evolutivo - UPTC - 2016
+# Por Santiago David 
+
+###### Si no estan ya instalados #######
 #instalar paquetes
 #install.packages("ggplot2")
 #install.packages("gapminder")
+#install.packages("lattice")
 
 #####
 # Cargar paquetes
@@ -13,40 +15,69 @@
 
 library(gapminder)
 library(ggplot2)
+library(lattice)
 
 #####
 ## Cargar datos usando base de datos gapminder
-#####
 
 data(gapminder) #cargamos datos en ambiente R
 head(gapminder) #variables  
 str(gapminder) #estructura de la base de datos
 
-### tres formas diferentes de graficar en R ###
-NOTE### incluir las diferencias... 
+### tres formas diferentes de graficar en R, cada una con diferente sintaxis ###
+
+# 1 - Funciones Base
+plot(x,y) 
+plot(gapminder$lifeExp, gapminder$gdpPercap) # ejemplo usando funciones basicas
+
+# 2 - Paquete para graficas "Lattice"
+xyplot(y~x, data) # diferente sintaxis, argumentos se adicionan en parentesis
+xyplot(gdpPercap~lifeExp, data = gapminder) # ejemplo usando lattice
+
+# 3 - Paquete para graficas "ggplot2"
+ggplot(data, aes(x,y) + geom_point()) 
+# construido con la idea que todas las graficas se pueden expresar con el mismo set de parametros
+# un set de datos
+# un sistema de coordenadas
+# un set de "geos" o la representacion grafica de los datos
+
+ggplot(data = gapminder,
+       aes(lifeExp, gdpPercap)) + geom_point() # ejemplo usando ggplot
+
+#la clave para entender ggplot esta en pensar en una figura como capas que se adicionan
+
+ggplot(data = gapminder,
+       aes(lifeExp, gdpPercap)) +
+  geom_point() +
+  xlab ("Life Expectancy") +
+  ylab ("GDP per capita") +
+  ggtitle ("Figura 1")
+
+##########
+# Ejercicio 1 - Modifique el ejemplo de forma que se observe como "expectativa de vida" a cambiado a lo largo del tiempo
+##########
+
+# En el ejemplo anterior, usamos la funcion "aes" para indicarle al tipo de grafica "geom", acerca 
+# de la ubicacion de los puntos para "x" y "y". Otra propiedad que podemos modificar es el "color"
+
+ggplot(data = gapminder,
+       aes(lifeExp, gdpPercap, colour = continent)) + geom_point()
 
 
-# ggplot esta construido de forma que todas las graficas se puedan interpretar usando los mismos
-# parametros
+### Podemos tambien adiciona otras capas como una linea de regresion o modificar los datos
 
-ggplot(data=gapminder, aes(x=lifeExp,y= gdpPercap,colour=continent))+
-  geom_point()
-ggplot(data=gapminder, aes(x=year,y= gdpPercap,colour=continent))+
-  geom_point() + geom_line()
-ggplot(data=gapminder, aes(x=year,y= lifeExp,by=country,colour=continent))+
-  geom_point() + geom_line()
-ggplot(data=gapminder, aes(x=year,y= lifeExp,by=country))+
-  geom_point() + geom_line(aes(colour=continent))
-
-### Life expectancy - Expectativa de vida
-ggplot(data=gapminder, aes(x=lifeExp,y= gdpPercap,colour=continent))+
-  geom_point()
-ggplot(data=gapminder, aes(x=lifeExp,y= gdpPercap,colour=continent))+
+ggplot(data=gapminder, aes(x=lifeExp,y= gdpPercap))+
   geom_point()+scale_y_log10() # cambiar escala de todos los datos
-ggplot(data=gapminder, aes(x=lifeExp,y= gdpPercap,colour=continent))+
+
+ggplot(data=gapminder, aes(x=lifeExp,y= gdpPercap))+
   geom_point()+scale_y_log10() + geom_smooth(method="lm")  # Adicionar regresion linear e intervalos de confianza
+
+ggplot(data=gapminder, aes(x=lifeExp,y= gdpPercap,colour=continent))+
+  geom_point()+scale_y_log10() + geom_smooth(method="lm")  # colores por continente
+
 ggplot(data=gapminder, aes(x=lifeExp,y= gdpPercap,colour=continent))+
   geom_point()+scale_y_log10() + geom_smooth(method="lm",size=1.5) # aumentar tamaño de linea
+
 ggplot(data=gapminder, aes(x=lifeExp,y= gdpPercap,colour=continent))+
   geom_point()+scale_y_log10() + geom_smooth(method="loess",size=1.5) # usando metodo diferente
 
@@ -54,16 +85,13 @@ ggplot(data=gapminder, aes(x=lifeExp,y= gdpPercap,colour=continent))+
   geom_point(colour="black",size=0.4,shape=3)+scale_y_log10() + geom_smooth(method="lm",size=1.5)  # cambiar el tamaño de puntos
 
 
-## EXTRA = poblacion y expectativa de vida
-ggplot(data = gapminder, aes(x=lifeExp, y=pop,colour=continent))+
-  geom_point()+scale_y_log10()
 
 ##### Para borrar todo del ambiente de R #####
 rm(list=ls())
 
-
-
-### Ejercicio usando Datos de Anolis en Islas del Caribe
+##########
+# Ejercicio 2 - Usando datos de Anolis en el Caribe 
+##########
 
 
 # 1- cargar base de datos de Anolis y explorar el tipo de variables en la matriz
@@ -72,25 +100,13 @@ rm(list=ls())
 # 4- Ahora coloree por ecomorfotipos, que diferencias observa?
 # 5- Agregue una linea de regresion a la grafica
 
-### Anolis data ###
-
-anolis<-read.csv("anolis.convergence.csv")
-str(anolis)
-
-ggplot(data=anolis, aes(x= SVLength,y= TailLength,colour=Island))+
-  geom_point(size=2) + geom_smooth(method="lm", size=1.5)
-
-ggplot(data=anolis, aes(x= SVLength,y= TailLength,colour=Ecomorph))+
-  geom_point(size=2) + geom_smooth(method="lm", size=1.5)
-
-#otras opciones
-ggplot(data=anolis, aes(x= FemurLength,y= TibiaLength,colour=Ecomorph))+
-  geom_point(size=2) + geom_smooth(method="lm", size=1.5)
-
-ggplot(data=anolis, aes(x= HumerusLength,y= RadiusLength,colour=Ecomorph))+
-  geom_point(size=2) + geom_smooth(method="lm", size=1.5)
 
 
+
+
+######################
+
+### Opcional ###
 
 ### Analisis ecomorfologias Anolis usando analisis multivariado y grafica
 
@@ -129,33 +145,6 @@ ggplot(data = anolis, aes(x= PC1, y= PC2, colour= Island))+
 ggplot(data = anolis, aes(x= PC1, y= PC2, colour= Ecomorph))+
   geom_point(size=3)
 
-#What does this imply about the body forms of species utilizing similar ecological resources?
-
-
-
-############################
-#Repaso Opcional
-
-#crear base de datos simple con tres tipos de variables diferentes
-
-perro<-c("selva","roska","guardian")
-peso<-c(3.4,6,10.5)
-bravo<-c(TRUE,FALSE,TRUE)
-
-#unir las variables en una data frame
-mascotas<-data.frame(perro,peso,bravo)
-
-mascotas$peso[2]+mascotas$peso[3]
-
-#cinco tipos de datos#
-typeof(mascotas$peso[1])
-typeof(1L)
-typeof(1+1i)
-typeof(TRUE)
-typeof("banana")
-
-todo<-c(3.14, "banano", TRUE)
-typeof(todo)
-
+# con base en la grafica, que se puede deducir de las morfologias de diferentes especies utilizando recursos ecologicos similares?
 
 
