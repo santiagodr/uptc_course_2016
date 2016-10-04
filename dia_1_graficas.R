@@ -44,27 +44,49 @@ ggplot(data, aes(x,y) + geom_point())
 ggplot(data = gapminder,
        aes(lifeExp, gdpPercap)) + geom_point() # ejemplo usando ggplot
 
-#la clave para entender ggplot esta en pensar en una figura como capas que se adicionan
-
-ggplot(data = gapminder,
-       aes(lifeExp, gdpPercap)) +
-  geom_point() +
-  xlab ("Life Expectancy") +
-  ylab ("GDP per capita") +
-  ggtitle ("Figura 1")
 
 ##########
 # Ejercicio 1 - Modifique el ejemplo de forma que se observe como "expectativa de vida" a cambiado a lo largo del tiempo
-##########
+
+
+
+#la clave para entender ggplot esta en pensar en una figura como capas que se adicionan
+
+# Otro ejemplo
+ggplot(data = gapminder, 
+       aes(x=year, y=lifeExp, 
+           by=country)) +
+  geom_line() # en este caso observamos como a cambiado la expectativa de vida en los ultimos 55 años, en este caso usando una capa "geom_line"
 
 # En el ejemplo anterior, usamos la funcion "aes" para indicarle al tipo de grafica "geom", acerca 
 # de la ubicacion de los puntos para "x" y "y". Otra propiedad que podemos modificar es el "color"
 
 ggplot(data = gapminder,
-       aes(lifeExp, gdpPercap, colour = continent)) + geom_point()
+       aes(year, lifeExp, 
+           by=country, color=continent)) +
+         geom_line() 
+
+########### 
+#Ejercicio 2 - que pasa si queremos observar ambos, puntos y lineas?
 
 
-### Podemos tambien adiciona otras capas como una linea de regresion o modificar los datos
+
+# es importante notar que en ggplot cada capa se adiciona sobre la anterior,
+# en este caso los puntos sobre las lineas
+# aqui podemos observarlo
+
+ggplot(data = gapminder, 
+       aes(x=year, y=lifeExp, 
+           by=country)) +
+  geom_line(aes(color=continent)) +
+  geom_point()
+
+
+########## 
+# Ejercicio 3 - Cambie el orden de los puntos y las lineas en la grafica, que pasa en este caso?
+
+
+### Tambien podemos adicionar otras capas como una linea de regresion o transformar los datos directamente en la grafica
 
 ggplot(data=gapminder, aes(x=lifeExp,y= gdpPercap))+
   geom_point()+scale_y_log10() # cambiar escala de todos los datos
@@ -85,8 +107,6 @@ ggplot(data=gapminder, aes(x=lifeExp,y= gdpPercap,colour=continent))+
   geom_point(colour="black",size=0.4,shape=3)+scale_y_log10() + geom_smooth(method="lm",size=1.5)  # cambiar el tamaño de puntos
 
 
-
-##### Para borrar todo del ambiente de R #####
 rm(list=ls())
 
 ##########
