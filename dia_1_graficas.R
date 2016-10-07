@@ -5,9 +5,9 @@
 
 ###### Si no estan ya instalados #######
 #instalar paquetes
-#install.packages("ggplot2")
-#install.packages("gapminder")
-#install.packages("lattice")
+install.packages("ggplot2")
+install.packages("gapminder")
+
 
 #####
 # Cargar paquetes
@@ -15,10 +15,11 @@
 
 library(gapminder)
 library(ggplot2)
-library(lattice)
 
 #####
 ## Cargar datos usando base de datos gapminder
+
+### gustavo tiene otra forma de bajar los paquetes
 
 data(gapminder) #cargamos datos en ambiente R
 head(gapminder) #variables  
@@ -28,11 +29,17 @@ str(gapminder) #estructura de la base de datos
 
 # 1 - Funciones Base
 plot(x,y) 
-plot(gapminder$lifeExp, gapminder$gdpPercap) # ejemplo usando funciones basicas
+plot(gapminder$lifeExp, gapminder$gdpPercap, ylab = ) # ejemplo usando funciones basicas
+
+
+
+
 
 # 2 - Paquete para graficas "Lattice"
 xyplot(y~x, data) # diferente sintaxis, argumentos se adicionan en parentesis
 xyplot(gdpPercap~lifeExp, data = gapminder) # ejemplo usando lattice
+
+
 
 # 3 - Paquete para graficas "ggplot2"
 ggplot(data, aes(x,y) + geom_point()) 
@@ -41,12 +48,23 @@ ggplot(data, aes(x,y) + geom_point())
 # un sistema de coordenadas
 # un set de "geos" o la representacion grafica de los datos
 
+
+
 ggplot(data = gapminder,
        aes(lifeExp, gdpPercap)) + geom_point() # ejemplo usando ggplot
 
 
 ##########
 # Ejercicio 1 - Modifique el ejemplo de forma que se observe como "expectativa de vida" a cambiado a lo largo del tiempo
+
+ggplot(data=gapminder, 
+       aes(year, lifeExp))+geom_point
+
+
+ggplot(data = gapminder, aes(lifeExp, year)) + geom_point(col="blue")
+
+ggplot(data=gapminder,
+       aes(year, lifeExp)) + geom_point()
 
 
 
@@ -69,6 +87,12 @@ ggplot(data = gapminder,
 ########### 
 #Ejercicio 2 - que pasa si queremos observar ambos, puntos y lineas?
 
+ggplot(data = gapminder,
+       aes(year, lifeExp, 
+           by=country, color=continent)) +
+  geom_line() + geom_point()
+
+
 
 
 # es importante notar que en ggplot cada capa se adiciona sobre la anterior,
@@ -82,11 +106,19 @@ ggplot(data = gapminder,
   geom_point()
 
 
+ggplot(data = gapminder,
+       aes(year, lifeExp, 
+           by=country, color=continent)) +
+  geom_line() + geom_point(col="black")
+
+
+
 ########## 
 # Ejercicio 3 - Cambie el orden de los puntos y las lineas en la grafica, que pasa en este caso?
 
 
 ### Tambien podemos adicionar otras capas como una linea de regresion o transformar los datos directamente en la grafica
+
 
 ggplot(data=gapminder, aes(x=lifeExp,y= gdpPercap))+
   geom_point()+scale_y_log10() # cambiar escala de todos los datos
@@ -107,7 +139,7 @@ ggplot(data=gapminder, aes(x=lifeExp,y= gdpPercap,colour=continent))+
   geom_point(colour="black",size=0.4,shape=3)+scale_y_log10() + geom_smooth(method="lm",size=1.5)  # cambiar el tamaño de puntos
 
 
-rm(list=ls())
+rm(list=ls()) # borrar el ambiente de R
 
 ##########
 # Ejercicio 2 - Usando datos de Anolis en el Caribe 
