@@ -5,8 +5,8 @@
 
 ###### Si no estan ya instalados #######
 #instalar paquetes
-install.packages("ggplot2")
-install.packages("gapminder")
+#install.packages("ggplot2")
+#install.packages("gapminder")
 
 
 #####
@@ -25,29 +25,18 @@ data(gapminder) #cargamos datos en ambiente R
 head(gapminder) #variables  
 str(gapminder) #estructura de la base de datos
 
-### tres formas diferentes de graficar en R, cada una con diferente sintaxis ###
+### dos formas diferentes de graficar en R, cada una con diferente sintaxis ###
 
 # 1 - Funciones Base
 plot(x,y) 
-plot(gapminder$lifeExp, gapminder$gdpPercap, ylab = ) # ejemplo usando funciones basicas
+plot(gapminder$lifeExp, gapminder$gdpPercap) # ejemplo usando funciones basicas
 
-
-
-
-
-# 2 - Paquete para graficas "Lattice"
-xyplot(y~x, data) # diferente sintaxis, argumentos se adicionan en parentesis
-xyplot(gdpPercap~lifeExp, data = gapminder) # ejemplo usando lattice
-
-
-
-# 3 - Paquete para graficas "ggplot2"
+# 2 - Paquete para graficas "ggplot2"
 ggplot(data, aes(x,y) + geom_point()) 
 # construido con la idea que todas las graficas se pueden expresar con el mismo set de parametros
 # un set de datos
 # un sistema de coordenadas
 # un set de "geos" o la representacion grafica de los datos
-
 
 
 ggplot(data = gapminder,
@@ -57,15 +46,8 @@ ggplot(data = gapminder,
 ##########
 # Ejercicio 1 - Modifique el ejemplo de forma que se observe como "expectativa de vida" a cambiado a lo largo del tiempo
 
-ggplot(data=gapminder, 
-       aes(year, lifeExp))+geom_point
-
-
-ggplot(data = gapminder, aes(lifeExp, year)) + geom_point(col="blue")
-
 ggplot(data=gapminder,
        aes(year, lifeExp)) + geom_point()
-
 
 
 #la clave para entender ggplot esta en pensar en una figura como capas que se adicionan
@@ -91,8 +73,6 @@ ggplot(data = gapminder,
        aes(year, lifeExp, 
            by=country, color=continent)) +
   geom_line() + geom_point()
-
-
 
 
 # es importante notar que en ggplot cada capa se adiciona sobre la anterior,
@@ -145,6 +125,11 @@ rm(list=ls()) # borrar el ambiente de R
 # Ejercicio 2 - Usando datos de Anolis en el Caribe 
 ##########
 
+#Los datos que vamos a utilizar en este ejercicio son promedios de medidas morfologicas 
+#para diferentes especies de _Anolis_ y fueron obtenidos del repositorio publico y articulo 
+#de Mahler etal (2013, Science 341: 292-295) "Exceptional convergence on the macroevolutionary 
+#lanscape in island lizard radiation"
+
 
 # 1- cargar base de datos de Anolis y explorar el tipo de variables en la matriz
 # 2- seleccione dos variables morfologicas que usted piense NO estan ~100% correlacionadas (ej. SVLength y TailLentgh)
@@ -153,14 +138,11 @@ rm(list=ls()) # borrar el ambiente de R
 # 5- Agregue una linea de regresion a la grafica
 
 
-
-
-
 ######################
 
 ### Opcional ###
 
-### Analisis ecomorfologias Anolis usando analisis multivariado y grafica
+### Analisis ecomorfologias Anolis usando analisis multivariado y grafica (modificado de R course UBC by Dolph Schluter)
 
 acp<-prcomp(anolis[,4:13]) #analisis componentes principales indicando que columnas incluir
 
