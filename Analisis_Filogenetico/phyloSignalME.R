@@ -3,21 +3,26 @@ library("geiger")
 library("caper")
 library("phytools")
 library("MASS")
-library("phytools")
 library("nlme")
 library("nortest")
 library("lsmeans")
 
-setwd("~/Dropbox/Colaborative Papers/BMR/Phylogenetic analysis/Manu_Elevation")
+###
+setwd("~/Desktop/uptc_curso_2016/uptc_curso_2016/Analisis_Filogenetico") ###
 
 read.csv("ManuElevation.csv", row.names=1, header=TRUE) -> data
 ME.data <- data[,1:6]
 row.names(ME.data)
 
+read.csv("ManuElevation2.csv", row.names=1, header=TRUE) -> data2
+ME.data2 <- data2[,1:6]
+row.names(ME.data2)
+
 read.nexus("MCC_Allspecies2014.tre") -> tree
 
-name.check(tree, data) -> extras
+name.check(tree, data2) -> extras
 extras
+
 ## exclude from tree species without data
 ME.tree <- drop.tip(tree,extras$tree_not_data)
 
@@ -131,13 +136,16 @@ anova (pg.gls)
 
 bm.elevation<-corBrownian(1,phy=ME.tree) 
 bm.gls<-gls(log.watts~altitude+log.mass,correlation=bm.elevation, data=ME.data)
-ou.elevation<-corMartins(1, phy=ME.tree, fixed=FALSE)
-ou.gls<-gls(log.watts~altitude+log.mass,correlation=ou.elevation, data=ME.data)
+ou.elevation<-corMartins(1, phy=ME.tree, fixed=TRUE)
+ou.gls<-gls(log.watts~altitude*log.mass,correlation=ou.elevation, data=ME.data)
+
 pg.elevation<-corPagel(1, phy=ME.tree, fixed=TRUE)
 pg.gls<-gls(log.watts~altitude+log.mass,correlation=pg.elevation, data=ME.data)
 summary(ou.gls)
 anova(pg.gls)
 anova(ou.gls,bm.gls,pg.gls)
+
+anova(ou.gls)
 
 ##### Non phylogenetci PGLS
 
